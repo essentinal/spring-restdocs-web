@@ -1,6 +1,6 @@
 # spring-restdocs-web
 
-##Overview
+## Overview
 This Spring REST Docs implementation allows the usage of REST Docs with Spring RestTemplate.
 
 ## Licence
