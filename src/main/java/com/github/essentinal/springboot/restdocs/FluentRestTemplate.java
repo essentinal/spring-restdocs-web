@@ -60,11 +60,16 @@ public class FluentRestTemplate {
     private final String url;
     private final HttpMethod method;
     private final Map<String, Object> urlVariables = new HashMap<>();
-    private final HttpEntity<?> requestEntity = HttpEntity.EMPTY;
+    private HttpEntity<?> requestEntity = HttpEntity.EMPTY;
 
     private Exchange(final String url, final HttpMethod method) {
       this.url = url;
       this.method = method;
+    }
+
+    public Exchange withContent(Object content) {
+      this.requestEntity = new HttpEntity<>(content);
+      return this;
     }
 
     public <T> ResponseEntity<T> forEntity(final Class<T> responseType) {
@@ -72,7 +77,7 @@ public class FluentRestTemplate {
     }
 
     @SuppressWarnings("unchecked")
-    public <T>ResponseEntity<T> forEntity() {
+    public <T> ResponseEntity<T> forEntity() {
       return (ResponseEntity<T>) delegate.exchange(url, method, requestEntity, Object.class, urlVariables);
     }
 
