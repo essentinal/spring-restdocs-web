@@ -1,3 +1,9 @@
+include::{snippets}/postGreeting/http-request.adoc[]
+include::{snippets}/postGreeting/http-response.adoc[]
+include::{snippets}/postGreeting/request-fields.adoc[]
+include::{snippets}/postGreeting/response-fields.adoc[]
+include::{snippets}/postGreeting/curl-request.adoc[]
+
 include::{snippets}/getGreetings/http-request.adoc[]
 include::{snippets}/getGreetings/http-response.adoc[]
 include::{snippets}/getGreetings/response-fields.adoc[]
