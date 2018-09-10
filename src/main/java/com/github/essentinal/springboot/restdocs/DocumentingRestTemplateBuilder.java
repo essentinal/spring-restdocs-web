@@ -17,118 +17,116 @@ import java.util.List;
  */
 public class DocumentingRestTemplateBuilder {
 
-    private final RestDocumentationContextProvider restDocumentation;
-    private final String identifier;
-    private final ClientHttpRequestFactory requestFactory;
-    private final List<HttpMessageConverter<?>> messageConverters;
-    private final RestTemplateOperationRequestFactory operationRequestFactory;
-    private final RestTemplateOperationResponseFactory operationResponseFactory;
+  private final RestDocumentationContextProvider restDocumentation;
+  private final String identifier;
+  private final ClientHttpRequestFactory requestFactory;
+  private final List<HttpMessageConverter<?>> messageConverters;
+  private final RestTemplateOperationRequestFactory operationRequestFactory;
+  private final RestTemplateOperationResponseFactory operationResponseFactory;
 
-    private final List<FieldDescriptor> requestFields = new ArrayList<FieldDescriptor>();
-    private final List<FieldDescriptor> responseFields = new ArrayList<FieldDescriptor>();
-    private final List<Snippet> additionalSnippets = new ArrayList<Snippet>();
+  private final List<FieldDescriptor> requestFields = new ArrayList<>();
+  private final List<FieldDescriptor> responseFields = new ArrayList<>();
+  private final List<Snippet> additionalSnippets = new ArrayList<>();
 
-    public DocumentingRestTemplateBuilder(
-            final RestDocumentationContextProvider restDocumentation,
-            final String identifier,
-            final ClientHttpRequestFactory requestFactory,
-            final List<HttpMessageConverter<?>> messageConverters,
-            final RestTemplateOperationRequestFactory operationRequestFactory,
-            final RestTemplateOperationResponseFactory operationResponseFactory) {
+  public DocumentingRestTemplateBuilder(
+    final RestDocumentationContextProvider restDocumentation,
+    final String identifier,
+    final ClientHttpRequestFactory requestFactory,
+    final List<HttpMessageConverter<?>> messageConverters,
+    final RestTemplateOperationRequestFactory operationRequestFactory,
+    final RestTemplateOperationResponseFactory operationResponseFactory) {
 
-        this.restDocumentation = restDocumentation;
-        this.identifier = identifier;
-        this.requestFactory = requestFactory;
-        this.messageConverters = messageConverters;
-        this.operationRequestFactory = operationRequestFactory;
-        this.operationResponseFactory = operationResponseFactory;
+    this.restDocumentation = restDocumentation;
+    this.identifier = identifier;
+    this.requestFactory = requestFactory;
+    this.messageConverters = messageConverters;
+    this.operationRequestFactory = operationRequestFactory;
+    this.operationResponseFactory = operationResponseFactory;
+  }
+
+  public DocumentingRestTemplateBuilder requestField(final FieldDescriptor fieldDescriptor) {
+    if (fieldDescriptor != null) {
+      requestFields.add(fieldDescriptor);
+    }
+    return this;
+  }
+
+  public DocumentingRestTemplateBuilder responseField(final FieldDescriptor fieldDescriptor) {
+    if (fieldDescriptor != null) {
+      responseFields.add(fieldDescriptor);
+    }
+    return this;
+  }
+
+  public DocumentingRestTemplateBuilder snippet(final Snippet snippet) {
+    if (snippet != null) {
+      additionalSnippets.add(snippet);
+    }
+    return this;
+  }
+
+  protected DocumentingRestTemplate build() {
+    return new DocumentingRestTemplate(
+      restDocumentation,
+      new RestTemplateOperationDocumenter(
+        operationRequestFactory,
+        operationResponseFactory,
+        identifier,
+        buildSnippets()
+      ),
+      requestFactory,
+      messageConverters
+    );
+  }
+
+  private List<Snippet> buildSnippets() {
+
+    final List<Snippet> finalSnippets = new ArrayList<>();
+
+    if (!requestFields.isEmpty()) {
+      finalSnippets.add(new RequestFieldsSnippet(requestFields) {
+      });
     }
 
-    public DocumentingRestTemplateBuilder requestField(final FieldDescriptor fieldDescriptor) {
-        if (fieldDescriptor != null) {
-            requestFields.add(fieldDescriptor);
-        }
-        return this;
+    if (!responseFields.isEmpty()) {
+      finalSnippets.add(new ResponseFieldsSnippet(responseFields) {
+      });
     }
 
-    public DocumentingRestTemplateBuilder responseField(final FieldDescriptor fieldDescriptor) {
-        if (fieldDescriptor != null) {
-            responseFields.add(fieldDescriptor);
-        }
-        return this;
-    }
+    finalSnippets.addAll(additionalSnippets);
 
-    public DocumentingRestTemplateBuilder snippet(final Snippet snippet) {
-        if (snippet != null) {
-            additionalSnippets.add(snippet);
-        }
-        return this;
-    }
+    return finalSnippets;
+  }
 
-    protected DocumentingRestTemplate build() {
-        return new DocumentingRestTemplate(
-                restDocumentation,
-                new RestTemplateOperationDocumenter(
-                        operationRequestFactory,
-                        operationResponseFactory,
-                        identifier,
-                        buildSnippets()
-                ),
-                requestFactory,
-                messageConverters
-        );
-    }
+  public FluentRestTemplate.Exchange get(final String url) {
+    return new FluentRestTemplate(build()).exchange(url, HttpMethod.GET);
+  }
 
-    private List<Snippet> buildSnippets() {
+  public FluentRestTemplate.Exchange post(final String url) {
+    return new FluentRestTemplate(build()).exchange(url, HttpMethod.POST);
+  }
 
-        final List<Snippet> finalSnippets = new ArrayList<Snippet>();
+  public FluentRestTemplate.Exchange put(final String url) {
+    return new FluentRestTemplate(build()).exchange(url, HttpMethod.PUT);
+  }
 
-        if (!requestFields.isEmpty()) {
-            finalSnippets.add(new RequestFieldsSnippet(requestFields) {
-            });
-        }
+  public FluentRestTemplate.Exchange delete(final String url) {
+    return new FluentRestTemplate(build()).exchange(url, HttpMethod.DELETE);
+  }
 
-        if (!responseFields.isEmpty()) {
-            finalSnippets.add(new ResponseFieldsSnippet(responseFields) {
-            });
-        }
+  public FluentRestTemplate.Exchange patch(final String url) {
+    return new FluentRestTemplate(build()).exchange(url, HttpMethod.PATCH);
+  }
 
-        for (final Snippet snippet : additionalSnippets) {
-            finalSnippets.add(snippet);
-        }
+  public FluentRestTemplate.Exchange head(final String url) {
+    return new FluentRestTemplate(build()).exchange(url, HttpMethod.HEAD);
+  }
 
-        return finalSnippets;
-    }
+  public FluentRestTemplate.Exchange options(final String url) {
+    return new FluentRestTemplate(build()).exchange(url, HttpMethod.OPTIONS);
+  }
 
-    public FluentRestTemplate.Exchange get(final String url) {
-        return new FluentRestTemplate(build()).exchange(url, HttpMethod.GET);
-    }
-
-    public FluentRestTemplate.Exchange post(final String url) {
-        return new FluentRestTemplate(build()).exchange(url, HttpMethod.POST);
-    }
-
-    public FluentRestTemplate.Exchange put(final String url) {
-        return new FluentRestTemplate(build()).exchange(url, HttpMethod.PUT);
-    }
-
-    public FluentRestTemplate.Exchange delete(final String url) {
-        return new FluentRestTemplate(build()).exchange(url, HttpMethod.DELETE);
-    }
-
-    public FluentRestTemplate.Exchange patch(final String url) {
-        return new FluentRestTemplate(build()).exchange(url, HttpMethod.PATCH);
-    }
-
-    public FluentRestTemplate.Exchange head(final String url) {
-        return new FluentRestTemplate(build()).exchange(url, HttpMethod.HEAD);
-    }
-
-    public FluentRestTemplate.Exchange options(final String url) {
-        return new FluentRestTemplate(build()).exchange(url, HttpMethod.OPTIONS);
-    }
-
-    public FluentRestTemplate.Exchange trace(final String url) {
-        return new FluentRestTemplate(build()).exchange(url, HttpMethod.TRACE);
-    }
+  public FluentRestTemplate.Exchange trace(final String url) {
+    return new FluentRestTemplate(build()).exchange(url, HttpMethod.TRACE);
+  }
 }

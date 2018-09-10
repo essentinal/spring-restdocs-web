@@ -12,62 +12,68 @@ import java.net.URI;
 
 public class DocumentingClientHttpRequest implements ClientHttpRequest {
 
-    private final ClientHttpRequest request;
-    private final ByteArrayOutputStream bodyBuffer;
+  private final ClientHttpRequest request;
+  private final ByteArrayOutputStream bodyBuffer;
 
-    public DocumentingClientHttpRequest(final ClientHttpRequest request) {
-        this.request = request;
-        this.bodyBuffer = new ByteArrayOutputStream(4096);
-    }
+  public DocumentingClientHttpRequest(final ClientHttpRequest request) {
+    this.request = request;
+    this.bodyBuffer = new ByteArrayOutputStream(4096);
+  }
 
-    public byte[] getBodyContent() {
-        return bodyBuffer.toByteArray();
+  public byte[] getBodyContent() {
+    return bodyBuffer.toByteArray();
+  }
+
+  @Override
+  public OutputStream getBody() throws IOException {
+    return new MaterializingOutputStream(request.getBody(), bodyBuffer);
+  }
+
+  @Override
+  public ClientHttpResponse execute() throws IOException {
+    return new DocumentingClientHttpResponse(request.execute());
+  }
+
+  @Override
+  public HttpMethod getMethod() {
+    return request.getMethod();
+  }
+
+  @Override
+  public URI getURI() {
+    return request.getURI();
+  }
+
+  @Override
+  public HttpHeaders getHeaders() {
+    return request.getHeaders();
+  }
+
+  @Override
+  public String getMethodValue() {
+    return request.getMethodValue();
+  }
+
+  private class MaterializingOutputStream extends OutputStream {
+
+    private final OutputStream next;
+    private final OutputStream buffer;
+
+    private MaterializingOutputStream(final OutputStream next, final OutputStream buffer) {
+      this.next = next;
+      this.buffer = buffer;
     }
 
     @Override
-    public OutputStream getBody() throws IOException {
-        return new MaterializingOutputStream(request.getBody(), bodyBuffer);
+    public void write(final int b) throws IOException {
+      buffer.write(b);
+      next.write(b);
     }
 
     @Override
-    public ClientHttpResponse execute() throws IOException {
-        return new DocumentingClientHttpResponse(request.execute());
+    public void write(final byte[] bytes, final int i, final int i1) throws IOException {
+      buffer.write(bytes, i, i1);
+      next.write(bytes, i, i1);
     }
-
-    @Override
-    public HttpMethod getMethod() {
-        return request.getMethod();
-    }
-
-    @Override
-    public URI getURI() {
-        return request.getURI();
-    }
-
-    @Override
-    public HttpHeaders getHeaders() {
-        return request.getHeaders();
-    }
-
-    @Override
-    public String getMethodValue() {
-        return request.getMethodValue();
-    }
-
-    private class MaterializingOutputStream extends OutputStream {
-
-        private final OutputStream next;
-        private final OutputStream buffer;
-
-        private MaterializingOutputStream(final OutputStream next, final OutputStream buffer) {
-            this.next = next;
-            this.buffer = buffer;
-        }
-
-        @Override
-        public void write(final int b) throws IOException {
-            buffer.write(b);
-            next.write(b);
-        }
-    }
+  }
 }

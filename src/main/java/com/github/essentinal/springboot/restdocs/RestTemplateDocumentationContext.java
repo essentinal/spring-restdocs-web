@@ -18,44 +18,44 @@ import java.util.List;
 
 public class RestTemplateDocumentationContext {
 
-    private final RestDocumentationContext restDocumentationContext;
-    private final WriterResolver writerResolver;
-    private final TemplateEngine templateEngine;
+  private final RestDocumentationContext restDocumentationContext;
+  private final WriterResolver writerResolver;
+  private final TemplateEngine templateEngine;
 
-    private final List<Snippet> defaultSnippets = Arrays.asList(CliDocumentation.curlRequest(),
-            HttpDocumentation.httpRequest(), HttpDocumentation.httpResponse());
+  private final List<Snippet> defaultSnippets = Arrays.asList(CliDocumentation.curlRequest(),
+    HttpDocumentation.httpRequest(), HttpDocumentation.httpResponse());
 
-    public RestTemplateDocumentationContext(
-            final RestDocumentationContext restDocumentationContext,
-            final WriterResolver writerResolver,
-            final TemplateEngine templateEngine) {
+  public RestTemplateDocumentationContext(
+    final RestDocumentationContext restDocumentationContext,
+    final WriterResolver writerResolver,
+    final TemplateEngine templateEngine) {
 
-        this.restDocumentationContext = restDocumentationContext;
-        this.writerResolver = writerResolver;
-        this.templateEngine = templateEngine;
-    }
+    this.restDocumentationContext = restDocumentationContext;
+    this.writerResolver = writerResolver;
+    this.templateEngine = templateEngine;
+  }
 
-    public RestTemplateDocumentationContext(final RestDocumentationContext restDocumentationContext) {
-        this(
-                restDocumentationContext,
-                new StandardWriterResolver(new RestDocumentationContextPlaceholderResolverFactory(), "UTF-8", TemplateFormats.asciidoctor()),
-                new MustacheTemplateEngine(new StandardTemplateResourceResolver(TemplateFormats.asciidoctor()))
-        );
-    }
+  public RestTemplateDocumentationContext(final RestDocumentationContext restDocumentationContext) {
+    this(
+      restDocumentationContext,
+      new StandardWriterResolver(new RestDocumentationContextPlaceholderResolverFactory(), "UTF-8", TemplateFormats.asciidoctor()),
+      new MustacheTemplateEngine(new StandardTemplateResourceResolver(TemplateFormats.asciidoctor()))
+    );
+  }
 
-    public RestDocumentationContext restDocumentationContext() {
-        return restDocumentationContext;
-    }
+  public RestDocumentationContext restDocumentationContext() {
+    return restDocumentationContext;
+  }
 
-    public WriterResolver writerResolver() {
-        return writerResolver;
-    }
+  public WriterResolver writerResolver() {
+    return writerResolver;
+  }
 
-    public TemplateEngine templateEngine() {
-        return templateEngine;
-    }
+  public TemplateEngine templateEngine() {
+    return templateEngine;
+  }
 
-    public List<Snippet> defaultSnippets() {
-        return defaultSnippets;
-    }
+  public List<Snippet> defaultSnippets() {
+    return defaultSnippets;
+  }
 }

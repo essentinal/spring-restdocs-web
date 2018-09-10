@@ -14,30 +14,30 @@ import java.util.List;
 
 public class RestTemplateOperationRequestFactory {
 
-    private final OperationRequestFactory factory;
+  private final OperationRequestFactory factory;
 
-    public RestTemplateOperationRequestFactory(final OperationRequestFactory factory) {
-        this.factory = factory;
+  public RestTemplateOperationRequestFactory(final OperationRequestFactory factory) {
+    this.factory = factory;
+  }
+
+  public RestTemplateOperationRequestFactory() {
+    this(new OperationRequestFactory());
+  }
+
+  public OperationRequest createOperationRequest(final URI url, final HttpMethod method, final ClientHttpRequest request) {
+
+    final HttpHeaders headers = new HttpHeaders();
+    final Parameters params = new Parameters();
+    final List<OperationRequestPart> parts = Collections.emptyList();
+    final byte[] body;
+
+    if (request instanceof DocumentingClientHttpRequest) {
+      body = ((DocumentingClientHttpRequest) request).getBodyContent();
+    } else {
+      throw new IllegalStateException("can not extract body content from " + request.getClass().getName()
+        + ", require " + DocumentingClientHttpRequest.class.getName());
     }
 
-    public RestTemplateOperationRequestFactory() {
-        this(new OperationRequestFactory());
-    }
-
-    public OperationRequest createOperationRequest(final URI url, final HttpMethod method, final ClientHttpRequest request) {
-
-        final HttpHeaders headers = new HttpHeaders();
-        final Parameters params = new Parameters();
-        final List<OperationRequestPart> parts = Collections.emptyList();
-        final byte[] body;
-
-        if (request instanceof DocumentingClientHttpRequest) {
-            body = ((DocumentingClientHttpRequest) request).getBodyContent();
-        } else {
-            throw new IllegalStateException("can not extract body content from " + request.getClass().getName()
-                    + ", require " + DocumentingClientHttpRequest.class.getName());
-        }
-
-        return factory.create(url, method, body, headers, params, parts);
-    }
+    return factory.create(url, method, body, headers, params, parts);
+  }
 }
