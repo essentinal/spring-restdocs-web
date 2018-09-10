@@ -49,6 +49,11 @@ public class DocumentingClientHttpRequest implements ClientHttpRequest {
         return request.getHeaders();
     }
 
+    @Override
+    public String getMethodValue() {
+        return request.getMethodValue();
+    }
+
     private class MaterializingOutputStream extends OutputStream {
 
         private final OutputStream next;

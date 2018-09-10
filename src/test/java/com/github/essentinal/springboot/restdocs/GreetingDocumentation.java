@@ -5,26 +5,26 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.restdocs.RestDocumentation;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebIntegrationTest(randomPort = true)
-@SpringApplicationConfiguration(classes = { TestApp.class })
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class GreetingDocumentation {
 
     @Rule
-    public final RestDocumentation restDocumentation = new RestDocumentation("target/generated-snippets");
+    public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/generated-snippets");
 
     private final RestTemplateDocumentation docs = RestTemplateDocumentation.using(restDocumentation).build();
 
-    @Value("${local.server.port}")
+    @LocalServerPort
     private int port;
 
     @Test

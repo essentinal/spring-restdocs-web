@@ -5,9 +5,13 @@ import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.restdocs.RestDocumentation;
+import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.util.Assert;
-import org.springframework.web.client.*;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.ResponseExtractor;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,11 +19,11 @@ import java.util.List;
 
 public class DocumentingRestTemplate extends RestTemplate {
 
-    private final RestDocumentation restDocumentation;
+    private final RestDocumentationContextProvider restDocumentation;
     private final RestTemplateOperationDocumenter documenter;
 
     DocumentingRestTemplate(
-            final RestDocumentation restDocumentation,
+            final RestDocumentationContextProvider restDocumentation,
             final RestTemplateOperationDocumenter documenter,
             final ClientHttpRequestFactory requestFactory,
             final List<HttpMessageConverter<?>> messageConverters) {

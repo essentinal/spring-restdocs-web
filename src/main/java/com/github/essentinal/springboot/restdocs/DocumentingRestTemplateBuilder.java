@@ -3,7 +3,7 @@ package com.github.essentinal.springboot.restdocs;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.restdocs.RestDocumentation;
+import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.RequestFieldsSnippet;
 import org.springframework.restdocs.payload.ResponseFieldsSnippet;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class DocumentingRestTemplateBuilder {
 
-    private final RestDocumentation restDocumentation;
+    private final RestDocumentationContextProvider restDocumentation;
     private final String identifier;
     private final ClientHttpRequestFactory requestFactory;
     private final List<HttpMessageConverter<?>> messageConverters;
@@ -29,7 +29,7 @@ public class DocumentingRestTemplateBuilder {
     private final List<Snippet> additionalSnippets = new ArrayList<Snippet>();
 
     public DocumentingRestTemplateBuilder(
-            final RestDocumentation restDocumentation,
+            final RestDocumentationContextProvider restDocumentation,
             final String identifier,
             final ClientHttpRequestFactory requestFactory,
             final List<HttpMessageConverter<?>> messageConverters,

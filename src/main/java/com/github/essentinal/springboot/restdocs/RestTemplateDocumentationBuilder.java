@@ -2,7 +2,7 @@ package com.github.essentinal.springboot.restdocs;
 
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.restdocs.RestDocumentation;
+import org.springframework.restdocs.RestDocumentationContextProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +12,13 @@ import java.util.List;
  */
 public class RestTemplateDocumentationBuilder {
 
-    private final RestDocumentation restDocumentation;
+    private final RestDocumentationContextProvider restDocumentation;
     private ClientHttpRequestFactory requestFactory;
     private final List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
     private RestTemplateOperationRequestFactory operationRequestFactory;
     private RestTemplateOperationResponseFactory operationResponseFactory;
 
-    public RestTemplateDocumentationBuilder(final RestDocumentation restDocumentation) {
+    public RestTemplateDocumentationBuilder(final RestDocumentationContextProvider restDocumentation) {
 
         if (restDocumentation == null) {
             throw new IllegalArgumentException("RestDocumentation must not be null");
@@ -101,7 +101,7 @@ public class RestTemplateDocumentationBuilder {
     /**
      * Use the given REST documentation for documenting the requests and responses.
      */
-    public static RestTemplateDocumentationBuilder using(final RestDocumentation restDocumentation) {
+    public static RestTemplateDocumentationBuilder using(final RestDocumentationContextProvider restDocumentation) {
         return new RestTemplateDocumentationBuilder(restDocumentation);
     }
 }

@@ -2,7 +2,7 @@ package com.github.essentinal.springboot.restdocs;
 
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.restdocs.RestDocumentation;
+import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.snippet.Snippet;
 import org.springframework.web.client.RestOperations;
 
@@ -13,14 +13,14 @@ import java.util.List;
 
 public class RestTemplateDocumentation {
 
-    private final RestDocumentation restDocumentation;
+    private final RestDocumentationContextProvider restDocumentation;
     private final ClientHttpRequestFactory requestFactory;
     private final List<HttpMessageConverter<?>> messageConverters;
     private final RestTemplateOperationRequestFactory operationRequestFactory;
     private final RestTemplateOperationResponseFactory operationResponseFactory;
 
     protected RestTemplateDocumentation(
-            final RestDocumentation restDocumentation,
+            final RestDocumentationContextProvider restDocumentation,
             final ClientHttpRequestFactory requestFactory,
             final List<HttpMessageConverter<?>> messageConverters,
             final RestTemplateOperationRequestFactory operationRequestFactory,
@@ -64,7 +64,7 @@ public class RestTemplateDocumentation {
         return document(identifier, snippets != null ? Arrays.asList(snippets) : Collections.<Snippet>emptyList());
     }
 
-    public static RestTemplateDocumentationBuilder using(final RestDocumentation restDocumentation) {
+    public static RestTemplateDocumentationBuilder using(final RestDocumentationContextProvider restDocumentation) {
         return RestTemplateDocumentationBuilder.using(restDocumentation);
     }
 
