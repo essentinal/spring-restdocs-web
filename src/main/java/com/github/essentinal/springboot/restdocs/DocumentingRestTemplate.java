@@ -1,4 +1,4 @@
-package com.github.crunc.springboot.restdocs;
+package com.github.essentinal.springboot.restdocs;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;

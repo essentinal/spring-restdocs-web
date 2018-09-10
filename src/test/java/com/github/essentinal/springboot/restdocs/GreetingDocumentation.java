@@ -1,4 +1,4 @@
-package com.github.crunc.springboot.restdocs;
+package com.github.essentinal.springboot.restdocs;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import org.junit.Rule;

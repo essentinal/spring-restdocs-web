@@ -1,4 +1,4 @@
-package com.github.crunc.springboot.restdocs;
+package com.github.essentinal.springboot.restdocs;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

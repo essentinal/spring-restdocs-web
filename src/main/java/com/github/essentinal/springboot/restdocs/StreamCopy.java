@@ -1,4 +1,4 @@
-package com.github.crunc.springboot.restdocs;
+package com.github.essentinal.springboot.restdocs;
 
 import java.io.IOException;
 import java.io.InputStream;
